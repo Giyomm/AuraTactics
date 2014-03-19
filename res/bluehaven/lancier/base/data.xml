@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<data>
+	<price>25</price>
+	<prof>15</prof>
+	<cmdt>10</cmdt>
+	<damage>1</damage>
+	<life>2</life>
+	<counter>0</counter>
+	<kind>close</kind>
+</data>
