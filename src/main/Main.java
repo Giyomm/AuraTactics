@@ -7,17 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.metadata.IIOMetadataNode;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -82,6 +72,30 @@ public class Main {
 		});
 		
 		JButton killButton = new JButton("Kill");
+		killButton.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				myUnit.killUnit();
+				myUnit = null;
+			}
+		});
 		
 		frame.getContentPane().add(createButton, BorderLayout.NORTH);
 		frame.getContentPane().add(attackButton, BorderLayout.SOUTH);

@@ -42,6 +42,7 @@ public class Unit {
 		
 		this.animationDictionnary.put("idle","res/"+this.nation+"/"+this.name+"/"+this.rank+"/idle.gif");
 		this.animationDictionnary.put("attack","res/"+this.nation+"/"+this.name+"/"+this.rank+"/attack.gif");
+		this.animationDictionnary.put("death","res/"+this.nation+"/"+this.name+"/"+this.rank+"/death.gif");
 	}
 	
 	public JLabel displayAnimation(String animationKey){
@@ -105,12 +106,6 @@ public class Unit {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-        int i = reader.getMinIndex();
-        try {
-			int numImages = reader.getNumImages(true);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
         IIOMetadata imageMetaData;
 		try {
 			imageMetaData = reader.getImageMetadata(0);
@@ -139,6 +134,34 @@ public class Unit {
         return(node);
   }
 
+	public void rankUp(String newRank){
+		this.rank = newRank;
+		this.animationDictionnary.put("idle","res/"+this.nation+"/"+this.name+"/"+this.rank+"/idle.gif");
+		this.animationDictionnary.put("attack","res/"+this.nation+"/"+this.name+"/"+this.rank+"/attack.gif");
+		this.animationDictionnary.put("death","res/"+this.nation+"/"+this.name+"/"+this.rank+"/death.gif");
+		this.displayAnimation("idle");
+	}
+	
+	public void killUnit(){
+		this.displayAnimation("death");
+		Timer t = new Timer();
+		t.schedule(new TimerTask() {
+		            @Override
+		            public void run() {
+		            	//destroy object
+		            	unitLabel.setIcon(null);
+		            }
+		        }, processAnimationTime("death"));
+	}
+	
+	public void dealDamage(Unit targetUnit){
+		
+	}
+	
+	public void receiveDamage(Unit attackingUnit){
+		
+	}
+	
 	public String getName() {
 		return name;
 	}
