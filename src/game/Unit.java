@@ -1,5 +1,6 @@
 package game;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,6 +18,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
+
+
+
 public class Unit {
 
 	private String name;
@@ -26,13 +33,16 @@ public class Unit {
 	private int cmdtCost;
 	private int profitability;
 	private int damage;
-	private double maximumLife;
-	private double currentLife;
+	private int maximumLife;
+	private int currentLife;
 	private int counterDamage;
 		
 	private Nation nation;
 	private Map<String, String> animationDictionnary = new HashMap<String,String>();
 	private JLabel unitLabel;
+	
+	static Document document;
+	static Element racine;
 	
 	public Unit(String _name, String _rank, Nation _nation){
 		this.unitLabel = new JLabel();
@@ -43,6 +53,26 @@ public class Unit {
 		this.animationDictionnary.put("idle","res/"+this.nation+"/"+this.name+"/"+this.rank+"/idle.gif");
 		this.animationDictionnary.put("attack","res/"+this.nation+"/"+this.name+"/"+this.rank+"/attack.gif");
 		this.animationDictionnary.put("death","res/"+this.nation+"/"+this.name+"/"+this.rank+"/death.gif");
+		
+		this.parseXML();
+	}
+	
+	public void parseXML(){
+		SAXBuilder sxb = new SAXBuilder();
+	      try{
+	         document = sxb.build(new File("res/"+this.nation+"/"+this.name+"/"+this.rank+"/data.xml"));
+	      }
+	      catch(Exception e){}
+	      racine = document.getRootElement();
+	
+	      this.price = Integer.valueOf(racine.getChild("price").getText());
+	      this.profitability = Integer.valueOf(racine.getChild("prof").getText());
+	      this.cmdtCost = Integer.valueOf(racine.getChild("cmdt").getText());
+	      this.maximumLife = Integer.valueOf(racine.getChild("life").getText());
+	      this.currentLife = this.maximumLife;
+	      this.damage = Integer.valueOf(racine.getChild("damage").getText());
+	      this.counterDamage = Integer.valueOf(racine.getChild("counter").getText());
+	      this.kind = racine.getChild("kind").getText();
 	}
 	
 	public JLabel displayAnimation(String animationKey){
@@ -134,12 +164,24 @@ public class Unit {
         return(node);
   }
 
-	public void rankUp(String newRank){
-		this.rank = newRank;
-		this.animationDictionnary.put("idle","res/"+this.nation+"/"+this.name+"/"+this.rank+"/idle.gif");
-		this.animationDictionnary.put("attack","res/"+this.nation+"/"+this.name+"/"+this.rank+"/attack.gif");
-		this.animationDictionnary.put("death","res/"+this.nation+"/"+this.name+"/"+this.rank+"/death.gif");
-		this.displayAnimation("idle");
+	public void rankUp(){
+		if(this.rank != "legendaire"){
+			String newRank = "";
+			
+			if(this.rank == "base")
+				newRank = "veteran";
+			else
+				newRank = "legendaire";
+			
+			this.rank = newRank;
+			this.animationDictionnary.put("idle","res/"+this.nation+"/"+this.name+"/"+this.rank+"/idle.gif");
+			this.animationDictionnary.put("attack","res/"+this.nation+"/"+this.name+"/"+this.rank+"/attack.gif");
+			this.animationDictionnary.put("death","res/"+this.nation+"/"+this.name+"/"+this.rank+"/death.gif");
+			this.displayAnimation("idle");
+			
+			this.profitability = (int) (this.profitability*1.50);
+			this.cmdtCost = (int) (this.cmdtCost-(this.cmdtCost*0.33));
+		}
 	}
 	
 	public void killUnit(){
@@ -218,19 +260,19 @@ public class Unit {
 		this.damage = damage;
 	}
 
-	public double getMaximumLife() {
+	public int getMaximumLife() {
 		return maximumLife;
 	}
 
-	public void setMaximumLife(double maximumLife) {
+	public void setMaximumLife(int maximumLife) {
 		this.maximumLife = maximumLife;
 	}
 
-	public double getCurrentLife() {
+	public int getCurrentLife() {
 		return currentLife;
 	}
 
-	public void setCurrentLife(double currentLife) {
+	public void setCurrentLife(int currentLife) {
 		this.currentLife = currentLife;
 	}
 
