@@ -1,31 +1,15 @@
 package game;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.metadata.IIOMetadataNode;
-import javax.imageio.stream.ImageInputStream;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 
 
-
 public class Unit {
-
+	
+	
 	private String name;
 	private String kind;
 	private String rank;
@@ -35,25 +19,16 @@ public class Unit {
 	private int damage;
 	private int maximumLife;
 	private int currentLife;
-	private int counterDamage;
-		
+	private int counterDamage;	
 	private Nation nation;
-	private Map<String, String> animationDictionnary = new HashMap<String,String>();
-	private JLabel unitLabel;
 	
 	static Document document;
 	static Element racine;
 	
 	public Unit(String _name, String _rank, Nation _nation){
-		this.unitLabel = new JLabel();
 		this.name = _name;
 		this.rank = _rank;
 		this.nation = _nation;
-		
-		this.animationDictionnary.put("idle","res/"+this.nation+"/"+this.name+"/"+this.rank+"/idle.gif");
-		this.animationDictionnary.put("attack","res/"+this.nation+"/"+this.name+"/"+this.rank+"/attack.gif");
-		this.animationDictionnary.put("death","res/"+this.nation+"/"+this.name+"/"+this.rank+"/death.gif");
-		
 		this.parseXML();
 	}
 	
@@ -73,135 +48,6 @@ public class Unit {
 	      this.damage = Integer.valueOf(racine.getChild("damage").getText());
 	      this.counterDamage = Integer.valueOf(racine.getChild("counter").getText());
 	      this.kind = racine.getChild("kind").getText();
-	}
-	
-	public JLabel displayAnimation(String animationKey){
-		ImageIcon image = new ImageIcon(this.getAnimationDictionnary().get(animationKey));		
-		if(unitLabel.getIcon() != null){
-			this.removeImage();
-		}
-		this.addImage(image);
-		return unitLabel;
-	}
-	
-	public void addImage(ImageIcon _image){
-		unitLabel.setIcon(_image);
-		unitLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		unitLabel.repaint();
-	}
-	
-	public void removeImage(){
-		unitLabel.setIcon(null);
-		unitLabel.repaint();
-		
-	}
-	
-	public JLabel updateAnimationFromIdle(String newAnimationKey){
-		unitLabel = displayAnimation(newAnimationKey);
-		Timer t = new Timer();
-		t.schedule(new TimerTask() {
-		            @Override
-		            public void run() {
-		            	unitLabel = displayAnimation("idle");
-		            }
-		        }, processAnimationTime(newAnimationKey));
-		return unitLabel;
-	}
-	
-	public int processAnimationTime(String animationKey){
-		int numberOfFrames = 0;
-		int delayBetweenFrames = 0;
-		
-		ImageReader reader = ImageIO.getImageReadersBySuffix("gif").next();
-		ImageInputStream in;
-		try {
-			in = ImageIO.createImageInputStream(new FileInputStream(this.animationDictionnary.get(animationKey)));
-			reader.setInput(in);  
-			for (int i = 1, count = reader.getNumImages(true); i <= count; i++)  
-			{  
-				++numberOfFrames;
-			}
-			 System.out.println("Frames: "+numberOfFrames); 
-		} catch (FileNotFoundException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}  
-        try {
-			reader.setInput(ImageIO.createImageInputStream(new FileInputStream("res/bluehaven/lancier/base/attack.gif")));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-        IIOMetadata imageMetaData;
-		try {
-			imageMetaData = reader.getImageMetadata(0);
-			String metaFormatName = imageMetaData.getNativeMetadataFormatName();
-	        IIOMetadataNode root = (IIOMetadataNode)imageMetaData.getAsTree(metaFormatName);
-	        IIOMetadataNode graphicsControlExtensionNode = getNode(root, "GraphicControlExtension");
-	        delayBetweenFrames = 10*Integer.parseInt(graphicsControlExtensionNode.getAttribute("delayTime"));
-	        System.out.println("Delay entre les frames: "+String.valueOf(delayBetweenFrames));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		return (delayBetweenFrames*numberOfFrames);
-		
-	}
-	
-	private static IIOMetadataNode getNode(IIOMetadataNode rootNode, String nodeName) {
-        int nNodes = rootNode.getLength();
-        for (int i = 0; i < nNodes; i++) {
-            if (rootNode.item(i).getNodeName().compareToIgnoreCase(nodeName)== 0) {
-            return((IIOMetadataNode) rootNode.item(i));
-            }
-       }
-        IIOMetadataNode node = new IIOMetadataNode(nodeName);
-        rootNode.appendChild(node);
-        return(node);
-  }
-
-	public void rankUp(){
-		if(this.rank != "legendaire"){
-			String newRank = "";
-			
-			if(this.rank == "base")
-				newRank = "veteran";
-			else
-				newRank = "legendaire";
-			
-			this.rank = newRank;
-			this.animationDictionnary.put("idle","res/"+this.nation+"/"+this.name+"/"+this.rank+"/idle.gif");
-			this.animationDictionnary.put("attack","res/"+this.nation+"/"+this.name+"/"+this.rank+"/attack.gif");
-			this.animationDictionnary.put("death","res/"+this.nation+"/"+this.name+"/"+this.rank+"/death.gif");
-			this.displayAnimation("idle");
-			
-			this.profitability = (int) (this.profitability*1.50);
-			this.cmdtCost = (int) (this.cmdtCost-(this.cmdtCost*0.33));
-		}
-	}
-	
-	public void killUnit(){
-		this.displayAnimation("death");
-		Timer t = new Timer();
-		t.schedule(new TimerTask() {
-		            @Override
-		            public void run() {
-		            	//destroy object
-		            	unitLabel.setIcon(null);
-		            }
-		        }, processAnimationTime("death"));
-	}
-	
-	public void dealDamage(Unit targetUnit){
-		
-	}
-	
-	public void receiveDamage(Unit attackingUnit){
-		
 	}
 	
 	public String getName() {
@@ -284,13 +130,12 @@ public class Unit {
 		this.counterDamage = counterDamage;
 	}
 
-	public Map<String, String> getAnimationDictionnary() {
-		return animationDictionnary;
+	public Nation getNation() {
+		return nation;
 	}
 
-	public void setAnimationDictionnary(Map<String, String> animationDictionnary) {
-		this.animationDictionnary = animationDictionnary;
+	public void setNation(Nation nation) {
+		this.nation = nation;
 	}
-	
 	
 }
