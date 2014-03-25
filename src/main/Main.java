@@ -159,13 +159,6 @@ public class Main {
 				if(unit1 == null){
 					unit1 = new CUnit("lancier","base",myNation);
 					unit1ImagePanel.add(unit1.getView().displayAnimation("idle"));
-					pv1.setText("Pv: "+unit1.getModel().getCurrentLife()+" / "+unit1.getModel().getMaximumLife());
-					damage1.setText("Damage: "+unit1.getModel().getDamage());
-					counter1.setText("Counter: "+unit1.getModel().getCounterDamage());
-					costPrice1.setText("Cost Price: "+unit1.getModel().getPrice());
-					cmdtCost1.setText("Cmdt cost: "+unit1.getModel().getCmdtCost());
-					prof1.setText("Profitability: "+unit1.getModel().getProfitability());
-					kindOfAttack1.setText("Kind of Attack: "+unit1.getModel().getKind());
 					frame.revalidate();
 				}
 			}
@@ -191,9 +184,6 @@ public class Main {
 				frame.revalidate();
 				System.out.println("New cmdtCost: "+unit1.getModel().getCmdtCost());
 				System.out.println("New Prof: "+unit1.getModel().getProfitability());
-				
-				prof1.setText("Profitability: "+unit1.getModel().getProfitability());
-				cmdtCost1.setText("Cmdt cost: "+unit1.getModel().getCmdtCost());
 			}
 		});
 		
@@ -219,23 +209,11 @@ public class Main {
 			public void mouseClicked(MouseEvent e) {
 				unit1.dealDamageByUnit(unit2);
 				if(unit2.getModel() == null){
-					pv2.setText("Pv: 0");
-					damage2.setText("Damage: 0");
-					counter2.setText("Counter: 0");
-					costPrice2.setText("Cost Price: 0");
-					cmdtCost2.setText("Cmdt cost: 0");
-					prof2.setText("Profitability: 0");
-					kindOfAttack2.setText("Kind of Attack: null");
 					unit2 = null;
 				}
-				else{
-					pv2.setText("Pv: "+unit2.getModel().getCurrentLife()+" / "+unit2.getModel().getMaximumLife());
-					damage2.setText("Damage: "+unit2.getModel().getDamage());
-					counter2.setText("Counter: "+unit2.getModel().getCounterDamage());
-					costPrice2.setText("Cost Price: "+unit2.getModel().getPrice());
-					cmdtCost2.setText("Cmdt cost: "+unit2.getModel().getCmdtCost());
-					prof2.setText("Profitability: "+unit2.getModel().getProfitability());
-					kindOfAttack2.setText("Kind of Attack: "+unit2.getModel().getKind());
+				
+				if(unit1.getModel() == null){
+					unit1 = null;
 				}
 				frame.revalidate();
 			}
@@ -264,13 +242,6 @@ public class Main {
 				if(unit2 == null){
 					unit2 = new CUnit("lancier","base",myNation);
 					unit2ImagePanel.add(unit2.getView().displayAnimation("idle"));
-					pv2.setText("Pv: "+unit2.getModel().getCurrentLife()+" / "+unit2.getModel().getMaximumLife());
-					damage2.setText("Damage: "+unit2.getModel().getDamage());
-					counter2.setText("Counter: "+unit2.getModel().getCounterDamage());
-					costPrice2.setText("Cost Price: "+unit2.getModel().getPrice());
-					cmdtCost2.setText("Cmdt cost: "+unit2.getModel().getCmdtCost());
-					prof2.setText("Profitability: "+unit2.getModel().getProfitability());
-					kindOfAttack2.setText("Kind of Attack: "+unit2.getModel().getKind());
 					frame.revalidate();
 				}
 			}

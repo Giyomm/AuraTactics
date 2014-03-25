@@ -138,4 +138,14 @@ public class Unit {
 		this.nation = nation;
 	}
 	
+	@Override
+	public String toString() {
+		return "Unit [name=" + name + ", kind=" + kind + ", rank=" + rank
+				+ ", price=" + price + ", cmdtCost=" + cmdtCost
+				+ ", profitability=" + profitability + ", damage=" + damage
+				+ ", maximumLife=" + maximumLife + ", currentLife="
+				+ currentLife + ", counterDamage=" + counterDamage
+				+ ", nation=" + nation + "]";
+	}
+	
 }

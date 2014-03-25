@@ -47,18 +47,42 @@ public class CUnit {
 	}
 	
 	public void dealDamageByUnit(CUnit targetUnit){
-		view.updateAnimationFromIdle("attack");
 		targetUnit.getModel().setCurrentLife(
 				targetUnit.getModel().getCurrentLife()-this.model.getDamage());
+		
+		System.out.println("Damage");
+		System.out.println(this.getModel().toString());
+		System.out.println(targetUnit.getModel().toString());
+		
+		if(targetUnit.getModel().getCounterDamage() > 0){
+			targetUnit.dealDamageByCounter(this);
+		}		
+
 		if(targetUnit.getModel().getCurrentLife() <= 0){
-			System.out.println("dead!");
+			System.out.println("dead by attack!");
 			targetUnit.killUnit();
 			targetUnit.setModel(null);
 		}
+		
+		if(this.getModel() != null){
+			view.updateAnimationFromIdle("attack");
+		}	
 	}
 	
-	public void dealDamageByCounter(Unit attackingUnit){
+	public void dealDamageByCounter(CUnit attackingUnit){
+			
+		attackingUnit.getModel().setCurrentLife(
+				attackingUnit.getModel().getCurrentLife()-this.model.getCounterDamage());
 		
+		System.out.println("Counter");
+		System.out.println(attackingUnit.getModel().toString());
+		System.out.println(this.getModel().toString());
+		
+		if(attackingUnit.getModel().getCurrentLife() <= 0){
+			System.out.println("dead by counter!");
+			attackingUnit.killUnit();
+			attackingUnit.setModel(null);
+		}
 	}
 
 	public VUnit getView() {

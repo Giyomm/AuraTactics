@@ -5,6 +5,6 @@
 	<cmdt>10</cmdt>
 	<damage>1</damage>
 	<life>2</life>
-	<counter>0</counter>
+	<counter>1</counter>
 	<kind>close</kind>
 </data>
